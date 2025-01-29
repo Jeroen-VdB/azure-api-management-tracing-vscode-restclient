@@ -1,0 +1,18 @@
+{
+    "rest-client.environmentVariables": {
+        "dev": {
+            "baseUrl": "https://my-apim-dev.azure-api.net",
+            "subscriptionKey": "APIM_DEV_SUBSCRIPTION_KEY",
+            "azureSubscriptionId": "my-subscription-id",
+            "resourceGroupName": "rg-my-apim-dev",
+            "apimServiceName": "my-apim-dev"
+        },
+        "prd": {
+            "baseUrl": "https://my-apim-prd.azure-api.net",
+            "subscriptionKey": "APIM_PRD_SUBSCRIPTION_KEY",
+            "azureSubscriptionId": "my-subscription-id",
+            "resourceGroupName": "rg-my-apim-prd",
+            "apimServiceName": "my-apim-prd"
+        }
+    }
+}

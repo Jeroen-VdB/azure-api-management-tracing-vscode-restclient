@@ -1,0 +1,30 @@
+# Replace the following values with your own.
+@apiName=my-api
+@operationPath=myApi/traceTest
+
+### Obtain a token credential for tracing
+# @name tracingTokenCredential
+POST https://management.azure.com/subscriptions/{{azureSubscriptionId}}/resourceGroups/{{resourceGroupName}}/providers/Microsoft.ApiManagement/service/{{apimServiceName}}/gateways/managed/listDebugCredentials?api-version=2023-09-01-preview
+Authorization: {{$aadToken}}
+Content-Type: application/json
+
+{
+    "credentialsExpireAfter": "PT1H",
+    "apiId": "/subscriptions/{{azureSubscriptionId}}/resourceGroups/{{resourceGroupName}}/providers/Microsoft.ApiManagement/service/{{apimServiceName}}/apis/{{apiName}}",
+    "purposes": ["tracing"]
+}
+
+### Add the token value in an Apim-Debug-Authorization request header to the API Management gateway
+# @name apiCall
+GET {{baseUrl}}/{{operationPath}} HTTP/1.1
+Ocp-Apim-Subscription-Key: {{$dotenv %subscriptionKey}}
+Apim-Debug-Authorization: {{tracingTokenCredential.response.body.token}}
+
+### Retrieve the trace corresponding to the trace ID.
+POST https://management.azure.com/subscriptions/{{azureSubscriptionId}}/resourceGroups/{{resourceGroupName}}/providers/Microsoft.ApiManagement/service/{{apimServiceName}}/gateways/managed/listTrace?api-version=2023-09-01-preview
+Authorization: {{$aadToken}}
+Content-Type: application/json
+
+{
+    "traceId": "{{apiCall.response.headers.Apim-Trace-Id}}"
+}
